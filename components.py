@@ -87,7 +87,21 @@ def draw_isoplane(canvas):
                  constants.TRIAD_LEN, ('y' in curr_plane_str) * constants.TRIAD_THK)
 
 
-def draw_pipe(args):
+def draw_pipe(args, canvas):
+    # get current window dimensions
+    print(canvas)
+
+    # determine the location of the existing port that the pipe
+    # needs to be connected to. if no free ports available, place
+    # the pipe in space
+
+    # determine location of ports based on direction specified
+
+    # recompute the rectangular center of all the ports currently
+    # in the model space and scale down + readjust the entire model
+
+    # create a unique pipe id and commit all information to the db
+
     pass
 
 
@@ -103,6 +117,6 @@ draw_methods = {'pipe': draw_pipe,
 # and return them to the calling function in input.py for storage
 # Function is also responsible for drawing the component by creating
 # a new instance of the component type
-def draw_component(command_string):
+def draw_component(command_string, canvas):
     params = command_string[1:]
-    draw_methods.get(command_string[0])(params)
+    draw_methods.get(command_string[0])(params, canvas)

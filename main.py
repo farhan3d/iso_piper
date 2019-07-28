@@ -43,7 +43,6 @@ class DynamicCanvas(Canvas):
     def canvas_manager(self):
         self.canvas_frame.bind("<Configure>", self.on_resize)
         self.canvas.pack(fill=BOTH, expand=YES)
-        self.canvas_frame.pack(side=RIGHT, fill=BOTH, expand=YES)
 
     def on_resize(self, event):
         parent_width = self.parent.root.winfo_width()
@@ -78,9 +77,10 @@ class CommandStatus(Label):
 
 
 class CommandInput(Entry):
-    def __init__(self):
+    def __init__(self, canvas):
         Entry.__init__(self)
         self.parent = None
+        self.canvas = canvas
         self.entry_container = Frame()
         self.separator = Frame(self.entry_container, height=4)
         self.separator.pack()
@@ -97,10 +97,12 @@ class CommandInput(Entry):
     def event_binder(self):
         self.entry.bind("<Return>", functools.partial(input.input_manager,
                                                       args=[self.entry,
-                                                            self.parent]))
+                                                            self.parent,
+                                                            self.canvas]))
         self.entry.bind("<KP_Enter>", functools.partial(input.input_manager,
                                                         args=[self.entry,
-                                                              self.parent]))
+                                                              self.parent,
+                                                              self.canvas]))
 
 
 class MainWindow:
@@ -123,9 +125,10 @@ class MainWindow:
         # self.root.resizable(0, 0)
         self.root.title("Piping Isometrics Generator (alpha)")
         self.core_margins()
-        self.entry = CommandInput()
-        self.label = CommandStatus()
         self.canvas = DynamicCanvas(self)
+        self.entry = CommandInput(self.canvas)
+        self.label = CommandStatus()
+        self.canvas.canvas_frame.pack(side=RIGHT, fill=BOTH, expand=YES)
         self.entry.set_parent(self)
         components.initialize_isoplane(self.canvas.canvas)
         boundingbox.initialize_boundingbox(self.canvas.canvas)
